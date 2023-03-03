@@ -12,7 +12,7 @@ wget -cO - \
     && mv scripts/oci-zx-scripts-main scripts/lib
 ```
 
-## Example
+## Example
 
 Create a `setenv.mjs` script to prepare environment:
 
