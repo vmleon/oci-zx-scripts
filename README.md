@@ -44,3 +44,35 @@ Run the script:
 ```sh
 npx zx scripts/setenv.mjs
 ```
+
+## Create new functions
+
+```javascript
+#!/usr/bin/env zx
+import { exitWithError } from "./utils.mjs";
+
+export async function example() {
+  try {
+    const { stdout, exitCode, stderr } = await $`pwd`;
+    if (exitCode !== 0) {
+      exitWithError(stderr);
+    }
+    return stdout.trim();
+  } catch (error) {
+    exitWithError(error.stderr);
+  }
+}
+```
+
+## Get Region example
+
+```javascript
+const regions = await getRegions();
+const regionName = await setVariableFromEnvOrPrompt(
+  "OCI_REGION",
+  "OCI Region name",
+  async () => printRegionNames(regions)
+);
+const { key } = regions.find((r) => r.name === regionName);
+const url = `${key}.ocir.io`;
+```

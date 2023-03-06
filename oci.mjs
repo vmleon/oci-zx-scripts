@@ -55,3 +55,23 @@ export async function getTenancyId() {
     : await question("OCI tenancy: ");
   return tenancyId;
 }
+
+export async function searchCompartmentIdByName(compartmentName) {
+  if (!compartmentName) {
+    exitWithError("Compartment name required");
+  }
+  try {
+    const { stdout, exitCode, stderr } =
+      await $`oci iam compartment list --compartment-id-in-subtree true --name ${compartmentName} --query "data[].id"`;
+    if (exitCode !== 0) {
+      exitWithError(stderr);
+    }
+    if (!stdout.length) {
+      exitWithError("Compartment name not found");
+    }
+    const compartmentId = JSON.parse(stdout.trim())[0];
+    return compartmentId;
+  } catch (error) {
+    exitWithError(error.stderr);
+  }
+}
