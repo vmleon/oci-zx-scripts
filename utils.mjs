@@ -23,23 +23,6 @@ export async function printRegionNames(regions) {
   );
 }
 
-export async function generateRandomString() {
-  try {
-    const output = (await $`openssl rand -base64 ${22}`).stdout.trim();
-    if (output.length) {
-      const cleanPassword = output
-        .replaceAll("/", "")
-        .replaceAll("\\", "")
-        .replaceAll("=", "");
-      return cleanPassword;
-    } else {
-      exitWithError("random string generation failed");
-    }
-  } catch (error) {
-    exitWithError(error.stderr);
-  }
-}
-
 export async function getRegionByKey(code = "fra") {
   const output = (await $`oci iam region list`).stdout.trim();
   const { data } = JSON.parse(output);

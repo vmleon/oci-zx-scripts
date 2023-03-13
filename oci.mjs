@@ -17,6 +17,35 @@ export async function getNamespace() {
   return data;
 }
 
+export async function listAdbDatabases(compartmentId) {
+  try {
+    const { stdout, exitCode, stderr } =
+      await $`oci db autonomous-database list --all --compartment-id ${compartmentId}`;
+    if (exitCode !== 0) {
+      exitWithError(stderr);
+    }
+    return JSON.parse(stdout.trim()).data;
+  } catch (error) {
+    exitWithError(`Error: download wallet ${error.stderr}`);
+  }
+}
+
+export async function downloadAdbWallet(adbId, walletFilePath, walletPassword) {
+  try {
+    const { stdout, exitCode, stderr } =
+      await $`oci db autonomous-database generate-wallet \
+      --autonomous-database-id ${adbId} \
+      --file ${walletFilePath} \
+      --password ${walletPassword}`;
+    if (exitCode !== 0) {
+      exitWithError(stderr);
+    }
+    console.log(`Wallet downloaded on ${chalk.green(walletFilePath)}`);
+  } catch (error) {
+    exitWithError(`Error: download wallet ${error.stderr}`);
+  }
+}
+
 export async function getAvailableShapes(options = {}) {
   try {
     const output = (
