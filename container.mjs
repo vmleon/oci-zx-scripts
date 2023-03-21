@@ -64,7 +64,7 @@ export async function pushImage(remote) {
   }
 }
 
-export async function build_image(name, version) {
+export async function buildImage(name, version) {
   console.log(`${ce} build . -t ${name}:${version}`);
   try {
     await $`${ce} build . -t ${name}:${version}`;
