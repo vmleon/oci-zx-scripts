@@ -1,5 +1,20 @@
 #!/usr/bin/env zx
 
+export async function readEnvJson() {
+  const envFilePath = ".env.json";
+  const envFileExists = await fs.pathExists(envFilePath);
+  if (envFileExists) {
+    return fs.readJson(envFilePath);
+  }
+  return writeEnvJson({});
+}
+
+export async function writeEnvJson(properties) {
+  const envFilePath = ".env.json";
+  await fs.writeJson(envFilePath, properties, { spaces: 2 });
+  return properties;
+}
+
 export async function validateBumpLevel(level) {
   if (!["major", "minor", "patch"].includes(level)) {
     exitWithError("Error: release version must be 'major', 'minor' or 'patch'");
