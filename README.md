@@ -168,3 +168,85 @@ async function releaseGradle(service) {
 }
 
 ```
+
+## Create RSA
+
+```javascript
+#!/usr/bin/env zx
+
+import {
+  getUserId,
+  uploadApiKeyFile,
+} from "./lib/oci.mjs";
+import { createRSAKeyPair } from "./lib/tls.mjs";
+
+const shell = process.env.SHELL | "/bin/zsh";
+$.shell = shell;
+$.verbose = false;
+
+async function createUserDetails() {
+  console.log("Generate RSA key pair...");
+
+  const userId = await getUserId();
+
+  properties = {
+    ...properties,
+    userId,
+  };
+
+  const rsaPath = "./.rsa";
+  const prevKeyExists = await fs.pathExists(path.join(rsaPath, "rsa.pem"));
+  if (prevKeyExists) {
+    console.log(`${chalk.yellow("Existing RSA key pair ")} on ${rsaPath}.`);
+  } else {
+    await createRSAKeyPair(rsaPath);
+    const apikeyFingerprint = await uploadApiKeyFile(
+      userId,
+      path.join(rsaPath, "rsa_public.pem")
+    );
+    properties = { ...properties, rsaPath, apikeyFingerprint };
+  }
+  console.log();
+}
+```
+
+## Use .env.json
+
+```javascript
+#!/usr/bin/env zx
+
+import {
+  getNamespace,
+  writeEnvJson,
+  generateRandomString,
+  readEnvJson,
+} from "./lib/utils.mjs";
+import { getTenancyId } from "./lib/oci.mjs";
+
+const shell = process.env.SHELL | "/bin/zsh";
+$.shell = shell;
+$.verbose = false;
+
+let properties = await readEnvJson();
+
+const namespace = await getNamespace();
+const tenancyId = await getTenancyId();
+properties = { ...properties, namespace, tenancyId };
+
+const generatedPassword = await generateRandomString();
+properties = { ...properties, generatedPassword };
+
+await writeEnvJson(properties);
+```
+
+```javascript
+#!/usr/bin/env zx
+
+import { readEnvJson } from "./lib/utils.mjs";
+
+const shell = process.env.SHELL | "/bin/zsh";
+$.shell = shell;
+$.verbose = false;
+
+const { namespace } = await readEnvJson();
+```

@@ -33,3 +33,17 @@ export async function generateRandomString(length = 20) {
     exitWithError(error.stderr);
   }
 }
+
+export async function createRSAKeyPair(outputPath = ".") {
+  await $`mkdir -p ${outputPath}`;
+  const privateKeyPath = path.normalize(path.join(outputPath, "rsa.pem"));
+  const publicKeyPath = path.normalize(path.join(outputPath, "rsa_public.pem"));
+  try {
+    await $`openssl genrsa -out ${privateKeyPath} 2048`;
+    console.log(`RSA Private Key written to: ${chalk.yellow(privateKeyPath)}`);
+    await $`openssl rsa -in ${privateKeyPath} -outform PEM -pubout -out ${publicKeyPath}`;
+    console.log(`RSA Public Key written to: ${chalk.yellow(publicKeyPath)}`);
+  } catch (error) {
+    exitWithError(error.stderr);
+  }
+}
