@@ -24,17 +24,13 @@ Use the following example:
 ```js
 #!/usr/bin/env zx
 
-import { getNamespace } from "./lib/oci.mjs";
-import { checkRequiredProgramsExist } from "./lib/utils.mjs";
-
+ ort { getNamespace } from "./lib/oci.mjs" 
 const shell = process.env.SHELL | "/bin/zsh";
 $.shell = shell;
 $.verbose = false;
 
 console.log("Check fake dependencies...");
-const dependencies = ["git", "unzip"];
-await checkRequiredProgramsExist(dependencies);
-
+ st dependencies = ["git", "unzip"] 
 const namespace = await getNamespace();
 console.log(namespace);
 ```
@@ -67,6 +63,9 @@ export async function example() {
 ## Get Region example
 
 ```javascript
+import { getRegions } from "./lib/oci.mjs";
+import { setVariableFromEnvOrPrompt, printRegionNames } from "./lib/utils.mjs";
+
 const regions = await getRegions();
 const regionName = await setVariableFromEnvOrPrompt(
   "OCI_REGION",
@@ -75,9 +74,10 @@ const regionName = await setVariableFromEnvOrPrompt(
 );
 const { key } = regions.find((r) => r.name === regionName);
 const url = `${key}.ocir.io`;
+console.log(url);
 ```
 
-## Release Example
+## Release Example
 
 ```javascript
 #!/usr/bin/env zx
@@ -169,7 +169,7 @@ async function releaseGradle(service) {
 
 ```
 
-## Create RSA
+## Create RSA
 
 ```javascript
 #!/usr/bin/env zx
@@ -210,7 +210,7 @@ async function createUserDetails() {
 }
 ```
 
-## Use .env.json
+## Use .env.json
 
 ```javascript
 #!/usr/bin/env zx
@@ -232,6 +232,7 @@ let properties = await readEnvJson();
 const namespace = await getNamespace();
 const tenancyId = await getTenancyId();
 properties = { ...properties, namespace, tenancyId };
+await writeEnvJson(properties);
 
 const generatedPassword = await generateRandomString();
 properties = { ...properties, generatedPassword };
@@ -249,4 +250,25 @@ $.shell = shell;
 $.verbose = false;
 
 const { namespace } = await readEnvJson();
+```
+
+
+```javascript
+#!/usr/bin/env zx
+
+import { setVariableFromEnvOrPrompt } from "./lib/utils.mjs";
+import { searchCompartmentIdByName } from "./lib/oci.mjs";
+
+const shell = process.env.SHELL | "/bin/zsh";
+$.shell = shell;
+$.verbose = false;
+
+const compartmentName = await setVariableFromEnvOrPrompt(
+  "COMPARTMENT_NAME",
+  "Compartment Name (root)"
+);
+
+const compartmentId = await searchCompartmentIdByName(
+  compartmentName || "root"
+);
 ```
