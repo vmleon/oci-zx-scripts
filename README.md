@@ -272,3 +272,19 @@ const compartmentId = await searchCompartmentIdByName(
   compartmentName || "root"
 );
 ```
+
+## Read Terraform Output
+
+```javascript
+#!/usr/bin/env zx
+
+import { getOutputValues } from "./lib/terraform.mjs";
+
+const shell = process.env.SHELL | "/bin/zsh";
+$.shell = shell;
+$.verbose = false;
+
+const tfOutput = await getOutputValues("./terraform");
+
+console.log(tfOutput)
+```
