@@ -21,16 +21,17 @@ touch scripts/setenv.mjs
 ```
 
 Use the following example:
+
 ```js
 #!/usr/bin/env zx
 
- ort { getNamespace } from "./lib/oci.mjs" 
+import { getNamespace } from "./lib/oci.mjs";
 const shell = process.env.SHELL | "/bin/zsh";
 $.shell = shell;
 $.verbose = false;
 
 console.log("Check fake dependencies...");
- st dependencies = ["git", "unzip"] 
+const dependencies = ["git", "unzip"];
 const namespace = await getNamespace();
 console.log(namespace);
 ```
@@ -166,7 +167,6 @@ async function releaseGradle(service) {
   console.log(`Released: ${chalk.yellow(remote_image)}`);
   await cd("..");
 }
-
 ```
 
 ## Create RSA
@@ -174,10 +174,7 @@ async function releaseGradle(service) {
 ```javascript
 #!/usr/bin/env zx
 
-import {
-  getUserId,
-  uploadApiKeyFile,
-} from "./lib/oci.mjs";
+import { getUserId, uploadApiKeyFile } from "./lib/oci.mjs";
 import { createRSAKeyPair } from "./lib/tls.mjs";
 
 const shell = process.env.SHELL | "/bin/zsh";
@@ -252,7 +249,6 @@ $.verbose = false;
 const { namespace } = await readEnvJson();
 ```
 
-
 ```javascript
 #!/usr/bin/env zx
 
@@ -286,5 +282,5 @@ $.verbose = false;
 
 const tfOutput = await getOutputValues("./terraform");
 
-console.log(tfOutput)
+console.log(tfOutput);
 ```
