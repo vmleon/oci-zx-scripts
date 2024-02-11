@@ -12,6 +12,12 @@ wget -cO - \
     && mv scripts/oci-zx-scripts-main scripts/lib
 ```
 
+Install libraries inside the `scripts` folder:
+
+```sh
+npm init -y && npm install mustache moment
+```
+
 ## Example
 
 Create a `setenv.mjs` script to prepare environment:
